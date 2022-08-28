@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cksc.admin.dao.mapper.CategoryMapper">
+
+    <resultMap id="categoryMap" type="com.cksc.admin.dao.pojo.Category" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+        <result column="category_name" property="categoryName" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="uid" property="uid" jdbcType="BIGINT" />
+    </resultMap>
+
+    <select id="getCategoryList" resultMap="categoryMap">
+        select * from ms_category
+        <where>
+            1 = 1
+            <if test="categoryName != null">
+                and category_name like "%"#{categoryName}"%"
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

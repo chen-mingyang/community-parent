@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cksc.dao.mapper.ThumbsUpMapper">
+
+    <!--  int findThumbsUpCountsById(Long id);-->
+    <select id="findThumbsUpCountsById" parameterType="long" resultType="int">
+        select count(*) from  ms_thumbs_up
+        where ap_id in (select id from ms_article where author_id=#{id})
+    </select>
+</mapper>

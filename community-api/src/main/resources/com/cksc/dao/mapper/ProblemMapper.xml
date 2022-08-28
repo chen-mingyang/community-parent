@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cksc.dao.mapper.ProblemMapper">
+
+    <!--将数据表字段与实体类字段一一对应-->
+    <resultMap id="articleMap" type="com.cksc.dao.pojo.Article">
+        <id column="id" property="id" />
+        <result column="author_id" property="authorId"/>
+        <result column="comment_counts" property="commentCounts"/>
+        <result column="create_date" property="createDate"/>
+        <result column="summary" property="summary"/>
+        <result column="title" property="title"/>
+        <result column="view_counts" property="viewCounts"/>
+        <result column="weight" property="weight"/>
+        <result column="body_id" property="bodyId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="ap_type" property="apType"/>
+        <result column="ap_state" property="apState"/>
+        <result column="tid" property="tid"/>
+    </resultMap>
+
+    <!--文章归档-根据年月日分别归档-->
+    <!--select year(create_date) as year,month(create_date) as month,count(*) as count from ms_article group by year,month-->
+    <!--因为传入数据库的年是毫秒值，所以用year有BUG 导致查询为NULL,修正用FROM_UNIXTIME-->
+    <select id="archiveProblems" resultType="com.cksc.dao.dos.Archives">
+        select FROM_UNIXTIME(create_date/1000,'%Y') as year,FROM_UNIXTIME(create_date/1000,'%m') as month,count(*) as count from ms_article where ap_type=2 and ap_state=1 group by year,month
+    </select>
+    <!--            Long categoryId,
+                               Long tagId,
+                               String year,
+                               String month-->
+
+    <!--根据归档年月查询对应的文章列表 在where后加1=1 连接条件-->
+    <select id="listProblems" resultMap="articleMap">
+        select * from ms_article
+        <where>
+            1 = 1 and ap_state=1
+            <if test="apType != null">
+                and ap_type=#{apType}
+            </if>
+            <if test="categoryId != null">
+                and category_id=#{categoryId}
+            </if>
+            <if test="tagId != null">
+                and id in (select article_id from ms_article_tag where tag_id=#{tagId})
+            </if>
+            <if test="year != null and year.length>0 and month != null and month.length>0">
+               and (FROM_UNIXTIME(create_date/1000,'%Y') =#{year} and FROM_UNIXTIME(create_date/1000,'%m')=#{month})
+            </if>
+        </where>
+        order by weight,create_date desc
+    </select>
+
+    <select id="getUserProblemList" resultMap="articleMap">
+        select * from ms_article
+        <where>
+            1 = 1 and ap_state=1
+            <if test="apType != null">
+                and ap_type=#{apType}
+            </if>
+            <if test="authorId != null">
+                and author_id=#{authorId}
+            </if>
+            <if test="tid != null">
+                and tid=#{tid}
+            </if>
+            <if test="title != null">
+                and title like "%"#{title}"%"
+            </if>
+        </where>
+        order by weight,create_date desc
+    </select>
+
+</mapper>

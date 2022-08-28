@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cksc.admin.dao.mapper.CommentMapper">
+
+    <resultMap id="commentMap" type="com.cksc.admin.dao.pojo.Comment" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="article_id" property="articleId" jdbcType="INTEGER" />
+        <result column="author_id" property="authorId" jdbcType="BIGINT" />
+        <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+        <result column="to_uid" property="toUid" jdbcType="BIGINT" />
+        <result column="level" property="level" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="BIGINT" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <select id="getCommentList" resultMap="commentMap">
+        select * from ms_comment
+        <where>
+            1 = 1
+            <if test="content != null">
+                and content like "%"#{content}"%"
+            </if>
+            <if test="authorId != null">
+                and author_id = #{authorId}
+            </if>
+            <if test="articleId != null">
+                and article_id = #{articleId}
+            </if>
+        </where>
+        order by create_date desc
+    </select>
+</mapper>

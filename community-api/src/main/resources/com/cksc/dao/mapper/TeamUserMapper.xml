@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cksc.dao.mapper.TeamUserMapper">
+
+    <resultMap id="teamUserMap" type="com.cksc.dao.pojo.TeamUser" >
+        <result column="tu_id" property="tuId" jdbcType="BIGINT" />
+        <result column="tid" property="tid" jdbcType="BIGINT" />
+        <result column="uid" property="uid" jdbcType="BIGINT" />
+        <result column="tu_type" property="tuType" jdbcType="INTEGER" />
+        <result column="tu_state" property="tuState" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+
+    <select id="getTeamUserList" resultMap="teamUserMap">
+        select * from ms_team_user
+        <where>
+            1 = 1
+            <if test="tid != null">
+                and tid=#{tid}
+            </if>
+            <if test="nickname != null">
+                and uid in (select id from ms_sys_user where nickname like "%"#{nickname}"%")
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

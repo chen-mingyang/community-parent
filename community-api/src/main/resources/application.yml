@@ -1,0 +1,49 @@
+server:
+  port: 8888
+
+spring:
+  # 服务名称
+  application:
+    name: community_cksc
+  # 部署请求前缀
+  mvc:
+    servlet:
+      path: /api
+  # 数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/blog_mszl?useUnicode=true&characterEncoding=UTF-8&serverTimeZone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # redis配置
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+  # 上传文件总的最大值
+  servlet:
+    multipart:
+      max-request-size: 20MB
+      max-file-size: 2MB
+
+# mybatis-plus配置 打印日志、前缀免除
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      table-prefix: ms_
+
+# 先在docker中安装rocketmq
+rocketmq:
+  #再进行rocketmq配置 docker的rocketmq地址:对外端口号
+  name-server: 172.17.0.4:9876
+  #rocketmq 生产组配置
+  producer:
+    group: blog_group
+
+# 七牛云对象存储配置
+qiniu:
+  accessKey: 3R03jhg3shlTSq2lVVnLgYZ-TPIwTpTF-Gr-UN0c
+  accessSecretKey: 5U-jPskIO2cNKyblR-iJc4cqBEFe2CMPYY8QrwUS
+

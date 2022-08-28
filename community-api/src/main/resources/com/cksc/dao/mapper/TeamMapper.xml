@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cksc.dao.mapper.TeamMapper">
+
+    <resultMap id="teamMap" type="com.cksc.dao.pojo.Team" >
+        <id column="tid" property="tid" jdbcType="BIGINT" />
+        <result column="t_name" property="tName" jdbcType="VARCHAR" />
+        <result column="t_briefly" property="tBriefly" jdbcType="VARCHAR" />
+        <result column="t_headshot" property="tHeadshot" jdbcType="VARCHAR" />
+        <result column="t_email" property="tEmail" jdbcType="VARCHAR" />
+        <result column="team_type" property="teamType" jdbcType="BIGINT" />
+        <result column="team_state" property="teamState" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="uid" property="uid" jdbcType="BIGINT" />
+    </resultMap>
+
+
+    <select id="getUserTeamList" resultMap="teamMap">
+        select * from ms_team
+        <where>
+            1 = 1
+            <if test="uid != null">
+                and tid in (select tid from ms_team_user where uid=#{uid})
+            </if>
+            <if test="tName != null">
+                and t_name like "%"#{tName}"%"
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>

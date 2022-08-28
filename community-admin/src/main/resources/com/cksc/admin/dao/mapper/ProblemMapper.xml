@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--MyBatis配置文件-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cksc.admin.dao.mapper.ProblemMapper">
+
+    <!--将数据表字段与实体类字段一一对应-->
+    <resultMap id="problemMap" type="com.cksc.admin.dao.pojo.Article">
+        <id column="id" property="id" />
+        <result column="author_id" property="authorId"/>
+        <result column="comment_counts" property="commentCounts"/>
+        <result column="create_date" property="createDate"/>
+        <result column="summary" property="summary"/>
+        <result column="title" property="title"/>
+        <result column="view_counts" property="viewCounts"/>
+        <result column="weight" property="weight"/>
+        <result column="body_id" property="bodyId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="ap_type" property="apType"/>
+        <result column="tid" property="tid"/>
+    </resultMap>
+
+    <select id="getProblemList" resultMap="problemMap">
+        select * from ms_article
+        <where>
+            1 = 1
+            <if test="apType != null">
+                and ap_type=#{apType}
+            </if>
+            <if test="title != null">
+                and title like "%"#{title}"%"
+            </if>
+        </where>
+        order by weight,create_date desc
+    </select>
+</mapper>
